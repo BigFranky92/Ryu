@@ -52,9 +52,8 @@ class NetworkMonitor(app_manager.RyuApp):
         self.monitor_thread = hub.spawn(self._monitor)
         self.save_freebandwidth_thread = hub.spawn(self._save_bw_graph)
 	self.time_init = datetime.now()
-	self.file_handler = open(r"/home/flow.txt", "w")
-	self.file_handler.write (str(self.time_init) + " switch , port , bw ")
-	self.file_handler.write("\n")
+	self.file_handler = open(r"/home/vpm/Desktop/flow.txt", "w")
+	self.file_handler.write (str(self.time_init) + " , switch , port , bw\n")
     @set_ev_cls(ofp_event.EventOFPStateChange, [MAIN_DISPATCHER, DEAD_DISPATCHER])
     def _state_change_handler(self, ev):
         """
@@ -87,6 +86,7 @@ class NetworkMonitor(app_manager.RyuApp):
                 self.show_stat('flow')
                 self.show_stat('port')
                 hub.sleep(1)
+	self.file_handler.close()
     def _save_bw_graph(self):
         """
             Save bandwidth data into networkx graph object.
@@ -365,9 +365,5 @@ class NetworkMonitor(app_manager.RyuApp):
                             self.port_features[dpid][stat.port_no][1]))
 			timestamp = self.time_init + timedelta(seconds = (self.port_stats[(dpid, stat.port_no)][-1][3])) 
 			self.file_handler.write(str(timestamp)+ " , " + str(dpid) + " , " + str(stat.port_no) + " , " + str.format("{0:.3f}", self._get_free_bw(CONF['band'],  abs(self.port_speed[(dpid, stat.port_no)][-1]))) + "\n" )
-			#self.file_handler.write(" , ")
-            		#self.file_handler.write(str(dpid))
-			#self.file_handler.write(" , ")
-           		#self.file_handler.write(str(self._get_free_bw(CONF['band'],  abs(self.port_speed[(dpid, stat.port_no)][-1]))))
-            		#self.file_handler.write("\n")
 	    print '\n'
+
