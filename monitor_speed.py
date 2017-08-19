@@ -52,7 +52,7 @@ class NetworkMonitor(app_manager.RyuApp):
         self.monitor_thread = hub.spawn(self._monitor)
         self.save_freebandwidth_thread = hub.spawn(self._save_bw_graph)
 	self.time_init = datetime.now()
-	self.file_handler = open(r"/home/vpm/Desktop/flow.txt", "w")
+	self.file_handler = open(r"/home/flow.txt", "w+")
 	self.file_handler.write (str(self.time_init) + " , switch , port , bw\n")
     @set_ev_cls(ofp_event.EventOFPStateChange, [MAIN_DISPATCHER, DEAD_DISPATCHER])
     def _state_change_handler(self, ev):
