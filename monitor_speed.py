@@ -54,6 +54,7 @@ class NetworkMonitor(app_manager.RyuApp):
 	self.time_init = datetime.now()
 	self.file_handler = open(r"/home/flow.txt", "w+")
 	self.file_handler.write (str(self.time_init) + " , switch , port , bw\n")
+	self.file_handler.close()
     @set_ev_cls(ofp_event.EventOFPStateChange, [MAIN_DISPATCHER, DEAD_DISPATCHER])
     def _state_change_handler(self, ev):
         """
@@ -83,8 +84,10 @@ class NetworkMonitor(app_manager.RyuApp):
                 self.best_paths = None
             hub.sleep(settings.MONITOR_PERIOD)
             if self.stats['flow'] or self.stats['port']:
+		self.file_handler = open("/home/flow.txt", "a")
                 self.show_stat('flow')
                 self.show_stat('port')
+		self.file_handler.close()
                 hub.sleep(1)
 	self.file_handler.close()
     def _save_bw_graph(self):
